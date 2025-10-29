@@ -1,5 +1,5 @@
 const products = document.querySelectorAll('.grid-container > div');
-const cartItemsWrap = document.querySelector('.cart-items');
+const cartItemsWrap = document.querySelector('.inside-cart-container');
 const emptyCart = document.querySelector('.cart-container');
 const cartContainer = document.querySelector('.add-to-cart-container');
 const orderPrice = document.querySelector('.order-price');
@@ -13,6 +13,8 @@ const confirmedTotalOrderContainer = document.querySelector('.confirm-order-cont
 
 let cartArray = [];
 
+//To get back the items in the storage if exits
+cartArray = JSON.parse(localStorage.getItem('PRODUCTCART')) || [] 
 const displayCartItems = () => {
     cartItemsWrap.innerHTML = "";
     let total = 0;
@@ -41,8 +43,9 @@ const displayCartItems = () => {
     cartHeading.textContent = `Your Cart (${totalItems})`;
 
     //To display the Confirm Order Container
-    confirmTOModal.onclick = function () {
-        modal.style.display = "block";
+    confirmTOModal.onclick = function (event) {
+        event.stopPropagation();
+        openModal();
 
         // To display the content in the add to cart container inside the modal
         confirmedOrdersContainer.innerHTML = "";
@@ -68,10 +71,27 @@ const displayCartItems = () => {
         </div>`
     }
     //To close the container 
-    spanCloseButton.onclick = function () {
+    spanCloseButton.onclick = function (event) {
+        event.stopPropagation();
+        closeModal();
+    }
+
+    //To make the screen inactive when the modal container is clicked
+    document.querySelector('.modal-overlay').onclick = function (){
+        closeModal();
+    }
+    function openModal () {
+        document.body.classList.add('modal-open');
+        document.querySelector('.modal-overlay').style.display = "block";
+        modal.style.display = "block";
+    }
+    function closeModal () {
+        document.body.classList.remove('modal-open');
+        document.querySelector('.modal-overlay').style.display = "none";
         modal.style.display = "none";
     }
 
+    //For the Add to Cart number
     if (cartArray.length === 0) {
     emptyCart.style.display = "block";
     cartContainer.style.display = "none";
@@ -82,7 +102,7 @@ const displayCartItems = () => {
     
     //For the remove button
     const removeBtn = document.querySelectorAll('.remove-btn');
-    removeBtn.forEach(button =>{
+    removeBtn.forEach(button => {
         button.addEventListener("click", function () {
             const indexToRemove = this.getAttribute("data-index");
 
@@ -91,32 +111,66 @@ const displayCartItems = () => {
                 displayCartItems();
             }
         })
-    })
-        
+    })    
 }
+displayCartItems();
+
+//storing the products in the local storage
+const addToStorage = () => {
+    localStorage.setItem('PRODUCTCART', JSON.stringify(cartArray));
+} 
 
 products.forEach((product) => {
-    let addToCartButton = product.querySelector("button");
-
-    addToCartButton.onclick = function () {
-    let productImg = product.querySelector("img").src;
-    let productTitle = product.querySelector(".product-type").innerText;
-    let productPrice = parseFloat(product.querySelector(".product-price").innerText.replace("$", ""));
+    const addCart = product.querySelector('.to-cart');
+    const increment = product.querySelector('.increment');
+    const minusButton = product.querySelector('.substraction');
+    const plusButton = product.querySelector('.addition');
+    const quantitySpan = product.querySelector('.increment span');
+    const productImg = product.querySelector("img").src;
+    const productTitle = product.querySelector(".product-type").innerText;
+    const productPrice = parseFloat(product.querySelector(".product-price").innerText.replace("$", ""));
     
-    let itemExist = cartArray.find(item => item.title === productTitle);
+    product.querySelector("button").addEventListener("click", () => {
+        addCart.style.display = 'none';
+        increment.style.display = 'flex';  
+    })
 
-    if (itemExist) {
-        itemExist.quantity++;
-    } else {
-    cartArray.push({
-        title: productTitle,
-        image: productImg,
-        price: productPrice,
-        quantity: 1,
-    });
-    }
-    
+    plusButton.addEventListener("click", (e) => {
+        e.stopPropagation();
+        let itemExist = cartArray.find(item => item.title === productTitle);
+
+            if (itemExist) {
+                itemExist.quantity++;
+                quantitySpan.textContent = itemExist.quantity;
+            } else {
+            cartArray.push({
+                title: productTitle,
+                image: productImg,
+                price: productPrice,
+                quantity: 1,
+            });
+            quantitySpan.textContent = 1;
+        }
+        displayCartItems();
+    })
+
+    minusButton.addEventListener("click", (e) => {
+        e.stopPropagation();
+        let itemExist = cartArray.find(item => item.title === productTitle);
+        if (itemExist) {
+            itemExist.quantity--;
+            if (itemExist.quantity <= 0) {
+                cartArray = cartArray.filter(item => item.title !== productTitle);
+                addCart.style.display = "flex";
+                increment.style.display = "none";
+                quantitySpan.textContent = 1;
+            }else {
+                quantitySpan.textContent = itemExist.quantity;
+            }
+            displayCartItems();
+        }
+    })
     displayCartItems();
-};
+    addToStorage();
 });
 

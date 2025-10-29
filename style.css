@@ -23,9 +23,6 @@ body {
     cursor: pointer;
     display: block;
 }
-.products:hover {
-    border: 2px solid hsl(14, 86%, 42%);
-}
 .product-mobile {
     display: none;
 }
@@ -35,21 +32,50 @@ body {
 .image-button-container {
     position: relative;
 }
-button {
+.image-button-container button {
     position: absolute;
     display: flex;
     justify-content: center;
-    padding: 0.5rem;
-    bottom: -5%;
+    bottom: -7%;
     left: 17%;
     width: 45%;
     border-radius: 20px;
     cursor: pointer;
-    border: 1px solid hsl(7, 20%, 60%);
+    border: 1px solid hsl(14, 25%, 72%);
     background-color: white;
 }
-/* button:hover{
+.image-button-container button:hover {
+    border: 1px solid hsl(14, 86%, 42%);
+    color: hsl(14, 86%, 42%);
+}
+.to-cart {
+    display: block;
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+}
+.increment {
+    display: none;
+    justify-content: space-between;
+    border: 1px solid hsl(14, 86%, 42%);
     background-color: hsl(14, 86%, 42%);
+    color: white;
+    width: 100%;
+    border-radius: 20px;
+    padding: 0.5rem;
+}
+.increment img {
+    background-color: hsl(14, 86%, 42%);
+    border: 1px solid white;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    padding: 0.1rem;
+}
+/* .increment img:hover{
+    background-color: white;
+    border: 1px solid hsl(14, 86%, 42%);
+    filter: brightness(0) saturate(100%) invert(42%) sepia(88%) saturate(1781%) hue-rotate(347deg) brightness(96%) contrast(91%);
 } */
 .cart-icon {
     margin-right: 0.5rem;
@@ -101,6 +127,9 @@ button {
     padding: 1rem;
     border-radius: 10px;
     display: none;
+}
+.inside-cart-container {
+    height: 59%;
     overflow: scroll;
     overflow-x: hidden;
 }
@@ -143,6 +172,12 @@ button {
     height: 15px;
     cursor: pointer;
 }
+/* .remove-btn:hover {
+    border: 1px solid black;
+}
+.icon:hover {
+    color: black;
+} */
 .quantity-container img {
     margin-left: 0.1rem;
     margin-bottom: 0.2rem;
@@ -177,7 +212,6 @@ button {
     margin-left: 1rem;
 }
 .confirm-button {
-    position: absolute;
     position: fixed;
     bottom: 17%;
     left: 68.5%;
@@ -189,11 +223,24 @@ button {
     color: white;
     font-weight: 600;
     font-size: 16px;
+    cursor: pointer;
+}
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    pointer-events: auto;
 }
 .modal-container {
     display: none;
     position: fixed;
-    z-index: 1;
+    z-index: 1000;
+    pointer-events: auto;
     left: 35%;
     top: 10%;
     width: 35%;
@@ -201,6 +248,13 @@ button {
     padding: 1.5rem;
     background-color: white;
     border-radius: 10px;
+}
+.inactive-background {
+    pointer-events: none;
+    opacity: 0.7;
+}
+body.modal-open {
+    overflow: hidden;
 }
 .confirm-close-container {
     display: flex;
@@ -371,7 +425,7 @@ h1{
     display: none;
 }
 .product-mobile {
-    display: block;
+    display: none;
     width: 100%;
     border-radius: 10px;
     cursor: pointer;
@@ -440,18 +494,76 @@ button {
     width: 80%;
 }
 }
-@media screen and (max-width: 450px) {
+@media screen and (max-width: 430px) {
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    padding-bottom: 600px;
+}
+.product-mobile {
+    display: block;
+}
+.product-tablet {
+    display: none;
+}
+.image-button-container button {
+    bottom: -8%;
+    left: 21.5%;
+    width: 55%;
+    padding: 0;
+    border-radius: 50px;
+}
+.increment img {
+    width: 20px;
+    height: 20px;
+}
+.product-name {
+    margin-top: 2rem;
+}
 .cart-container {
-    top: 367%;
+    top: 430%;
+    left: 7%;
+    height: 50%;
+}
+.cart-container img {
+    margin: 3rem 0 0 6rem ;
 }
 .add-to-cart-container {
-    top: 367%;   
+    position: absolute;
+    top: 346%;
+    left: 7%;
+    width: 90%;
+    height: 80%;   
+}
+.logo-cont{
+    position: absolute;
+    width: 100%;
+    margin: -9% 0 0 0;
+}
+.confirm-button {
+    position: absolute;
+    bottom: -3%;
+    left: 2%;
+    width: 95%;
 }
 .modal-container {
     height: 82%;
+    width: 93%;
+}
+.orders {
+    height: 40%;
+    width: 85%;
+    padding: 1rem;
+    margin: 1rem 0 0 0;
 }
 .new-order {
-    bottom: 5%;
+    position: absolute;
+    bottom: 2%;
+    left: 2%;
+    width: 95%;
 }
 }
 @media screen and (max-width: 414px) {
@@ -501,6 +613,9 @@ button {
 }
 }
 @media screen and (max-width: 375px) {
+    /* html {
+        zoom: 0.8;
+    } */
 button {
     padding: 0.5rem;
     width: 47%;
